@@ -1,7 +1,10 @@
 package com.salesforce.pubsub;
 
-import com.salesforce.eventbus.protobuf.PubSubProto;
+import com.salesforce.eventbus.protobuf.FetchRequest;
+import com.salesforce.eventbus.protobuf.FetchResponse;
+import com.salesforce.eventbus.protobuf.ReplayPreset;
 import com.salesforce.eventbus.protobuf.PubSubGrpc;
+import io.grpc.stub.StreamObserver;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.Metadata;
@@ -66,15 +69,15 @@ public class Main {
         PubSubGrpc.PubSubStub pubSubStub = PubSubGrpc.newStub(channel);
         pubSubStub = MetadataUtils.attachHeaders(pubSubStub, headers);
 
-        PubSubProto.FetchRequest request = PubSubProto.FetchRequest.newBuilder()
+        FetchRequest request = FetchRequest.newBuilder()
                 .setTopicName("Your_Topic_Name")
                 .setNumRequested(10)
-                .setReplayPreset(PubSubProto.ReplayPreset.LATEST)
+                .setReplayPreset(ReplayPreset.LATEST)
                 .build();
 
-        pubSubStub.subscribe(new StreamObserver<PubSubProto.FetchResponse>() {
+        pubSubStub.subscribe(new StreamObserver<FetchResponse>() {
             @Override
-            public void onNext(PubSubProto.FetchResponse response) {
+            public void onNext(FetchResponse response) {
                 response.getEventsList().forEach(event -> {
                     System.out.println("Received event: " + event.getEvent().getPayload());
                 });
