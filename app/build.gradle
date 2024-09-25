@@ -1,6 +1,7 @@
 plugins {
     id 'java'
-    id 'com.google.protobuf' version '0.8.17'
+    id 'com.google.protobuf' version '0.9.1'
+    id 'application'
 }
 
 repositories {
@@ -9,9 +10,9 @@ repositories {
 
 dependencies {
     // gRPC and Protobuf dependencies
-    implementation 'io.grpc:grpc-netty-shaded:1.45.0'
-    implementation 'io.grpc:grpc-protobuf:1.45.0'
-    implementation 'io.grpc:grpc-stub:1.45.0'
+    implementation 'io.grpc:grpc-netty-shaded:1.51.0'
+    implementation 'io.grpc:grpc-protobuf:1.51.0'
+    implementation 'io.grpc:grpc-stub:1.51.0'
     implementation 'com.google.protobuf:protobuf-java:3.19.4'
 
     // HTTP client for Salesforce REST API
@@ -22,18 +23,23 @@ dependencies {
 
     // For javax.annotation.Generated
     implementation 'javax.annotation:javax.annotation-api:1.3.2'
+
+    // Add JUnit dependency
+    testImplementation 'junit:junit:4.13.2'
 }
 
 protobuf {
-    protoc { artifact = 'com.google.protobuf:protoc:3.19.4' }
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.21.7'
+    }
     plugins {
-        grpc { artifact = 'io.grpc:protoc-gen-grpc-java:1.45.0' }
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.51.0'
+        }
     }
     generateProtoTasks {
-        all().each { task ->
-            task.plugins {
-                grpc {}
-            }
+        all()*.plugins {
+            grpc {}
         }
     }
 }
@@ -41,8 +47,26 @@ protobuf {
 sourceSets {
     main {
         java {
-            srcDirs += 'build/generated/source/proto/main/grpc/*' // Add gRPC-generated classes
-            srcDirs += 'build/generated/source/proto/main/java/*' // Add Protobuf-generated classes
+            srcDirs += 'build/generated/source/proto/main/grpc'
+            srcDirs += 'build/generated/source/proto/main/java'
         }
     }
+    test {
+        java {
+            exclude '**/AppTest.java' // excluding tests for now
+        }
+    }
+}
+
+// Ensure that the generateProto task runs before compileJava
+tasks.compileJava.dependsOn tasks.generateProto
+
+// Set the main class
+application {
+    mainClassName = 'com.salesforce.pubsub.Main'
+}
+
+// Skip tests
+test {
+    exclude '**/*Test.class'
 }

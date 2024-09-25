@@ -11,4 +11,4 @@ plugins {
 }
 
 rootProject.name = 'SalesforcePubSubSubscriber-Java'
-include('app')
+include(':app')
