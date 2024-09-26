@@ -15,8 +15,29 @@ dependencies {
     implementation 'io.grpc:grpc-stub:1.51.0'
     implementation 'com.google.protobuf:protobuf-java:3.19.4'
 
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+
+    implementation 'org.apache.avro:avro:1.11.0'
+
     // HTTP client for Salesforce REST API
     implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+
+    // Jackson for JSON handling
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
+
+    // Gson for parsing OAuth tokens
+    implementation 'com.google.code.gson:gson:2.8.9'
+
+    // Apache Beam Direct Runner for local execution
+    implementation("org.apache.beam:beam-runners-direct-java:2.47.0")
+
+    // implementation ("org.apache.beam:beam-sdks-java-io-file-based:2.47.0")
+
+    // Core Apache Beam SDK
+    implementation("org.apache.beam:beam-sdks-java-core:2.47.0")
+
+    // Optional: Google Cloud Platform IOs for GCP integration
+    implementation("org.apache.beam:beam-sdks-java-io-google-cloud-platform:2.47.0")
 
     // JSON parsing
     implementation 'org.json:json:20210307'
